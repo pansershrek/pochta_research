@@ -162,7 +162,7 @@ def upload_data(request):
         ans = {}
         for index, delivery_data in data.items():
             ans[index] = get_suggest(delivery_data)
-        return render(request, "suggest.html", ans)
+        return render(request, "suggest.html", context={"ans": ans})
     else:
         form = UploadForm
         return render(request, "upload_data.html", {"form": form})

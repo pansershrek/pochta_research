@@ -2,7 +2,12 @@
 {% block title %} Предложения {% endblock %}
 
 {% block main %}
-
+<a href="/">На главную</a>
 <div>
+ {% for key,value in ans.items %}
+
+{{key}}: {{ value }}
+
+ {% endfor %}
 </div>
 {% endblock %}
