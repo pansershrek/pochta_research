@@ -6,9 +6,10 @@
 <div class="container justify-content-between p-3 mb-2 my-3">
     <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
-    <table>
-        {{ form.as_p }}
-    </table>
-    <input type="submit" value="Send" >
+    {{ form.as_p }}
+    <input type="submit" value="Отправить" >
+    </form>
+    <br>
+    <a href="/static/upload_data.json">Пример файла для загрузки</a>
 </div>
 {% endblock %}
