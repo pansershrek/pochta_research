@@ -143,7 +143,7 @@ def get_suggest(delivery_data):
         if not choise["check_fast"]:
             ans_suggest.append(suggest[1])
     elif choise["check_np"]:
-        ans_suggest.append(suggest[3], suggest[4])
+        ans_suggest.extend([suggest[3], suggest[4]])
     if not ans_suggest:
         ans_suggest.append(suggest[5])
     return ans_suggest
