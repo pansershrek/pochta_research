@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+  main:
+    build: .
+    image: main
+    command: ["bash", "-c", "cd main; pwd; ls; python3 ./manage.py runserver"]
+    volumes:
+      - .:/main
+    ports:
+      - "8000:8000"
+    networks:
+     - net
+
+networks:
+  net:
+    driver: bridge
