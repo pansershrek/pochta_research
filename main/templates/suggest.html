@@ -6,13 +6,14 @@
  {% for key,value in ans.items %}
 
     <div> Посылка номер {{key}}:
-        <div>
+        <p style="text-indent: 20px;"><div>
             {% for suggest in value %}
             <div>
-                {{ suggest }}
+                <p style="text-indent: 40px;">{{ suggest }}</p>
             </div>
             {% endfor %}
         </div>
+    </p>
     </div>
 
  {% endfor %}
