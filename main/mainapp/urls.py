@@ -17,7 +17,7 @@ from geopy import distance
 from .forms import UploadForm
 
 
-SHORT_DIST_DELIVERY = 10
+SHORT_DIST_DELIVERY = 30
 LONG_DIST_DELIVERY = 1500
 
 with open("../coord_reserch/i2c", "r") as f:
@@ -41,8 +41,8 @@ def check_type_short(delivery_data):
     index_from = delivery_data["индекс отправителя"]
     index_to = delivery_data["индекс получателя"]
     try:
-        coord_from = index2coord[index_from][::-1]
-        coord_to = index2coord[index_to][::-1]
+        coord_from = index2coord[str(index_from)][::-1]
+        coord_to = index2coord[str(index_to)][::-1]
         dist = distance.distance(coord_from, coord_to).km
         return dist <= SHORT_DIST_DELIVERY
     except:
@@ -54,8 +54,8 @@ def check_type_long(delivery_data):
     index_from = delivery_data["индекс отправителя"]
     index_to = delivery_data["индекс получателя"]
     try:
-        coord_from = index2coord[index_from][::-1]
-        coord_to = index2coord[index_to][::-1]
+        coord_from = index2coord[str(index_from)][::-1]
+        coord_to = index2coord[str(index_to)][::-1]
         dist = distance.distance(coord_from, coord_to).km
         return dist >= LONG_DIST_DELIVERY
     except:
