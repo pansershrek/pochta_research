@@ -8,6 +8,7 @@ from collections import defaultdict
 import os
 from django.shortcuts import redirect
 
+import io
 import logging
 import json
 from geopy import distance
@@ -31,6 +32,7 @@ suggest = {
     2: "Использовать услугу 'sms для получателя'",
     3: "Использовать услугу 'Онлайн оплата наложенного платежа'",
     4: "Выставить галочку 'Отправлять посылку с наложенным платежом только с описью'",
+    5: "Нету предложений"
 }
 
 
@@ -142,6 +144,8 @@ def get_suggest(delivery_data):
             ans_suggest.append(suggest[1])
     elif choise["check_np"]:
         ans_suggest.append(suggest[3], suggest[4])
+    if not ans_suggest:
+        ans_suggest.append(suggest[5])
     return ans_suggest
 
 
@@ -150,17 +154,15 @@ def upload_data(request):
         try:
             form = UploadForm(request.POST, request.FILES)
             if form.is_valid():
-                data = json.loads(io.BytesIO(request.FILES['file'].read()))
-                logging.error("Succes upload")
+                data = json.load(io.BytesIO(request.FILES['file'].read()))
+                logging.info("Succes upload")
         except BaseException as e:
             logging.error(f"Exception {e}")
-            redirect(".")
-        print(data)
-        redirect("/")
+            redirect("/")
         ans = {}
         for index, delivery_data in data.items():
             ans[index] = get_suggest(delivery_data)
-
+        return render(request, "suggest.html", ans)
     else:
         form = UploadForm
         return render(request, "upload_data.html", {"form": form})
