@@ -5,7 +5,15 @@
 <div>
  {% for key,value in ans.items %}
 
-{{key}}: {{ value }}
+    <div> Посылка номер {{key}}:
+        <div>
+            {% for suggest in value %}
+            <div>
+                {{ suggest }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
  {% endfor %}
 </div>
