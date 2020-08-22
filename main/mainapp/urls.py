@@ -10,13 +10,125 @@ from django.shortcuts import redirect
 
 import logging
 import json
+from geopy import distance
 
+SHORT_DIST_DELIVERY = 10
+LONG_DIST_DELIVERY = 1500
 
 with open("../coord_reserch/i2c", "r") as f:
     index2coord = json.load(f)
 
 with open("../coord_reserch/p2a", "r") as f:
     index2addr = json.load(f)
+
+suggest = {
+    0: "Использовать услугу быстрой доставки",
+    1: "Использовать услугу 'Объявленная ценность'",
+    2: "Использовать услугу 'sms для получателя'",
+    3: "Использовать услугу 'Наложенный платеж'",
+    4: "Использовать услугу 'Онлай оплата наложенного платежа'",
+    5: "Выставить галочку 'Отправлять посылку с наложенным платежом только с описью'"
+}
+
+
+def check_type_short(delivery_data):
+    """Check short distance delivery"""
+    index_from = delivery_data["индекс отправителя"]
+    index_to = delivery_data["индекс получателя"]
+    try:
+        coord_from = index2coord[index_from][::-1]
+        coord_to = index2coord[index_to][::-1]
+        dist = distance.distance(coord_from, coord_to).km
+        return dist <= SHORT_DIST_DELIVERY
+    except:
+        return False
+
+
+def check_type_long(delivery_data):
+    """Check long distance delivery"""
+    index_from = delivery_data["индекс отправителя"]
+    index_to = delivery_data["индекс получателя"]
+    try:
+        coord_from = index2coord[index_from][::-1]
+        coord_to = index2coord[index_to][::-1]
+        dist = distance.distance(coord_from, coord_to).km
+        return dist >= LONG_DIST_DELIVERY
+    except:
+        return False
+
+
+def check_oc(delivery_data):
+    try:
+        oc = delivery_data["сумма ОЦ (руб)"]
+        return oc > 0
+    except:
+        return False
+
+
+def check_np(delivery_data):
+    try:
+        np = delivery_data["сумма НП (руб)"]
+        return np > 0
+    except:
+        return False
+
+
+def sms_rec(delivery_data):
+    try:
+        sms = delivery_data["sms для получателя"]
+        return sms == True
+    except:
+        return False
+
+
+def check_save(delivery_data):
+    try:
+        save = delivery_data["отметка 'Осторожно'"]
+        return save == True
+    except:
+        return False
+
+
+def check_fast(delivery_data):
+    try:
+        fast = delivery_data["ускоренное"]
+        return fast == True
+    except:
+        return False
+
+
+def check_weight(delivery_data):
+    try:
+        weight = delivery_data["ускоренное"]
+        return weight
+    except:
+        return 0
+
+
+def check_opis(delivery_data):
+    try:
+        opis = delivery_data["с описью вложений"]
+        return opis
+    except:
+        return False
+
+
+def full_choise(delivery_data):
+    return = {
+        "check_type_short": check_type_short(delivery_data),
+        "check_type_long": check_type_long(delivery_data),
+        "check_oc": check_oc(delivery_data),
+        "check_np": check_np(delivery_data),
+        "sms_rec": sms_rec(delivery_data),
+        "check_save": check_save(delivery_data),
+        "check_fast": check_fast(delivery_data),
+        "check_weight": check_weight(delivery_data),
+        "check_opis": check_opis(delivery_data),
+    }
+
+
+def get_suggest(delivery_data):
+    choise = full_choise(delivery_data)
 
 
 def tmp(request):
