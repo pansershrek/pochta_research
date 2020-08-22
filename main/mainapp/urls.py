@@ -12,6 +12,10 @@ import logging
 import json
 from geopy import distance
 
+
+from .forms import UploadForm
+
+
 SHORT_DIST_DELIVERY = 10
 LONG_DIST_DELIVERY = 1500
 
@@ -113,7 +117,7 @@ def check_opis(delivery_data):
 
 
 def full_choise(delivery_data):
-    return = {
+    return {
         "check_type_short": check_type_short(delivery_data),
         "check_type_long": check_type_long(delivery_data),
         "check_oc": check_oc(delivery_data),
@@ -141,14 +145,32 @@ def get_suggest(delivery_data):
     return ans_suggest
 
 
-def tmp(request):
-    return render(request, "base.html")
+def upload_data(request):
+    if request.method == "POST":
+        try:
+            form = UploadForm(request.POST, request.FILES)
+            if form.is_valid():
+                data = json.loads(io.BytesIO(request.FILES['file'].read()))
+                logging.error("Succes upload")
+        except BaseException as e:
+            logging.error(f"Exception {e}")
+            redirect(".")
+        print(data)
+        redirect("/")
+        ans = {}
+        for index, delivery_data in data.items():
+            ans[index] = get_suggest(delivery_data)
+
+    else:
+        form = UploadForm
+        return render(request, "upload_data.html", {"form": form})
+    return redirect("/")
 
 
 def about_us(request):
     return render(request, "about_us.html")
 
 urlpatterns = [
-    path("tmp", tmp, name="tmp"),
+    path("", upload_data, name="upload_data"),
     path("about_us", about_us, name="about_us")
 ]
