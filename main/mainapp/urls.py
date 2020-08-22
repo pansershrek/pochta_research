@@ -23,11 +23,10 @@ with open("../coord_reserch/p2a", "r") as f:
 
 suggest = {
     0: "Использовать услугу быстрой доставки",
-    1: "Использовать услугу 'Объявленная ценность'",
+    1: "Использовать услугу 'ускоренное'",
     2: "Использовать услугу 'sms для получателя'",
-    3: "Использовать услугу 'Наложенный платеж'",
-    4: "Использовать услугу 'Онлай оплата наложенного платежа'",
-    5: "Выставить галочку 'Отправлять посылку с наложенным платежом только с описью'"
+    3: "Использовать услугу 'Онлайн оплата наложенного платежа'",
+    4: "Выставить галочку 'Отправлять посылку с наложенным платежом только с описью'",
 }
 
 
@@ -128,7 +127,18 @@ def full_choise(delivery_data):
 
 
 def get_suggest(delivery_data):
+    ans_suggest = []
     choise = full_choise(delivery_data)
+    if choise["check_type_short"]:
+        ans_suggest.append(suggest[0])
+    elif choise["check_type_long"]:
+        if not choise["sms_rec"]:
+            ans_suggest.append(suggest[2])
+        if not choise["check_fast"]:
+            ans_suggest.append(suggest[1])
+    elif choise["check_np"]:
+        ans_suggest.append(suggest[3], suggest[4])
+    return ans_suggest
 
 
 def tmp(request):
