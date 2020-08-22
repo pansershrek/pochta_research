@@ -9,6 +9,14 @@ import os
 from django.shortcuts import redirect
 
 import logging
+import json
+
+
+with open("../coord_reserch/i2c", "r") as f:
+    index2coord = json.load(f)
+
+with open("../coord_reserch/p2a", "r") as f:
+    index2addr = json.load(f)
 
 
 def tmp(request):
