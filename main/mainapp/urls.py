@@ -20,12 +20,11 @@ from .forms import UploadForm
 SHORT_DIST_DELIVERY = 10
 LONG_DIST_DELIVERY = 1500
 
-# with open("../coord_reserch/i2c", "r") as f:
-#     index2coord = json.load(f)
-index2addr, index2coord = {}, {}
+with open("../coord_reserch/i2c", "r") as f:
+    index2coord = json.load(f)
 
-# with open("../coord_reserch/p2a", "r") as f:
-#     index2addr = json.load(f)
+with open("../coord_reserch/p2a", "r") as f:
+    index2addr = json.load(f)
 
 suggest = {
     0: "Использовать услугу быстрой доставки",
