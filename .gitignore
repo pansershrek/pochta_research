@@ -1,2 +1,5 @@
 data/*
 .ipynb_checkpoints
+data.zip
+*.pyc
+*/*/__pycache__
